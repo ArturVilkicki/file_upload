@@ -1,0 +1,10 @@
+body {
+	background-color: gray;
+}
+h1 {
+	color: white;
+}
+#heading {
+	padding: 30px;
+	background-color: orange;
+}
