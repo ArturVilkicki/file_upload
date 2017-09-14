@@ -12,12 +12,15 @@
 //}
 if (isset($_FILES['image'])) {
    $file = $_FILES['image'];
-
+   $naujas_pavadinimas = $_FILES['newname'];
+   $naujaas_pavadinimas2 = $naujas_pavadinimas['tmp_name'];
    //File properties
    $file_name = $file['name'];
    $file_tmp = $file['tmp_name'];
    $file_size = $file['size'];
-
+   $max_size = 1024*1024;
+   $err = "";
+   //$file_new_name = $_POST['newname'];
    //Work out with the file extension
    $file_ext = explode(".", $file_name);
    $file_ext = strtolower(end($file_ext));
@@ -25,24 +28,23 @@ if (isset($_FILES['image'])) {
    $allowed = array ("png", "jpg", "gif");
 
    if (in_array($file_ext, $allowed)) {
-      if ($file_size <=100000) {
-         $file_name_new = uniqid('', true) . '.' . $file_ext;
+      if ($file_size <=1024*1024) {
+         //$file_name_new = uniqid('', true) . '.' . $file_ext;
+         $file_name_new = $naujaas_pavadinimas2 . '.' . $file_ext;
          $file_destination = 'uploads/' . $file_name_new;
 
-         if (move_uploaded_file($file_tmp, $file_destination)) {
-            echo $file_destination;
-         }
+        if (move_uploaded_file($file_tmp, $file_destination)) {
+            echo "ok";
+        } 
+      } else {
+        $err = "File is larger than" . $max_size;
       }
-   }
+    } else {
+       $err = "File type is not supported";
+    }
 
 }
-
-
-      
-
 ?>
-
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -63,14 +65,25 @@ if (isset($_FILES['image'])) {
 			<div class="col-6">
 				<h2>Upload form</h2>
 				<form method="post" enctype="multipart/form-data">
-    				<input type="file" name="image">
+    				New name: <input type="text" name="newname">
+            <input type="file" name="image">
     				<input type="submit" value="Upload Image" name="submit">
 				</form>
+
+        <?php
+        if ($err) {
+          echo "Error:" . $err;
+        }
+        ?>
+        
 			</div>
 			<div class="col-6">
 				<h2>Debug</h2>
 				<pre>
-				<?php print_r($_FILES['image']); ?>
+				<?php 
+        print_r($_FILES['image']);
+        print_r($_FILES['newname']);
+         ?>
 				</pre>
 			</div>
 		</div>
