@@ -1,40 +1,44 @@
 <?php
-$max_size = 1024;
-$allowed_ext = array("png", "jpg", "gif");
-if(isset($_FILES['image'])){
-      if ($_FILES['image']['size']< $max_size) {
-      	$file_extension = explode(".", $_FILES['image']['name'])[1];
-      	if (in_array($file_extension, $allowed_ext) ) {
-      		(move_uploaded_file($_FILES["image"]["tmp_name"], "uploads")) {
+//$max_size = 1024;
+//$allowed_ext = array("png", "jpg", "gif");
+//if(isset($_FILES['image'])){
+      //if ($_FILES['image']['size']< $max_size) {
+      	//$file_extension = explode(".", $_FILES['image']['name'])[1];
+      	//if (in_array($file_extension, $allowed_ext) ) {
+      		//(move_uploaded_file($_FILES["image"]["tmp_name"], "uploads")) 
         
-      	}
-      }
+      	//}
+     //}
+//}
+if (isset($_FILES['image'])) {
+   $file = $_FILES['image'];
 
+   //File properties
+   $file_name = $file['name'];
+   $file_tmp = $file['tmp_name'];
+   $file_size = $file['size'];
 
-      $errors= array();
-      $file_name = $_FILES['image']['name'];
-      $file_size =$_FILES['image']['size'];
-      $file_tmp =$_FILES['image']['tmp_name'];
-      $file_type=$_FILES['image']['type'];
-      $file_ext=strtolower(end(explode('.',$_FILES['image']['name'])));
-      
-      $expensions= array("jpg","png","gif");
-      
-      if(in_array($file_ext,$expensions)=== false){
-         $errors[]="extension not allowed, please choose a JPG or PNG or GIF file.";
-      }
-      
-      if($file_size < 1000000){
-         $errors[]='File size must be excately 2 MB';
-      }
-      
-      if(empty($errors)==true){
-         move_uploaded_file($file_tmp,"images/".$file_name);
-         echo "Success";
-      }else{
-         print_r($errors);
+   //Work out with the file extension
+   $file_ext = explode(".", $file_name);
+   $file_ext = strtolower(end($file_ext));
+
+   $allowed = array ("png", "jpg", "gif");
+
+   if (in_array($file_ext, $allowed)) {
+      if ($file_size <=100000) {
+         $file_name_new = uniqid('', true) . '.' . $file_ext;
+         $file_destination = 'uploads/' . $file_name_new;
+
+         if (move_uploaded_file($file_tmp, $file_destination)) {
+            echo $file_destination;
+         }
       }
    }
+
+}
+
+
+      
 
 ?>
 
